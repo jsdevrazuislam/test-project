@@ -25,7 +25,7 @@
   }
 
   .thumbnail {
-    @apply w-12 h-12 object-cover rounded-md cursor-pointer transition;
+    @apply w-16 h-16 object-cover rounded-md cursor-pointer transition;
   }
 
   .thumbnail-active {

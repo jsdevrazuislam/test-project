@@ -21,14 +21,35 @@
   };
 </script>
 
-<div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="max-w-7xl mx-auto px-4 py-8">
+
+<nav class="text-sm text-[#606266] mb-5">
+  <ol class="flex items-center space-x-2">
+    <li>
+      <a href="/" class="hover:underline">Home</a>
+    </li>
+    <li>
+      <span>›</span>
+    </li>
+    <li>
+      <a href="/womens-clothing" class="hover:underline text-gray-600"
+        >Women's Clothing</a
+      >
+    </li>
+    <li>
+      <span>›</span>
+    </li>
+    <li>Dress</li>
+  </ol>
+</nav>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
   <div class="flex flex-col md:flex-row gap-4">
     <div class="flex md:flex-col gap-2">
       {#each images as image, index}
         <img
           src={image}
           alt="thumb"
-          class='thumbnail'
+          class="thumbnail"
           class:thumbnail-active={index === currentImageIndex}
           on:click={() => selectImage(index)}
         />
@@ -124,7 +145,7 @@
     </div>
 
     <button class="text-blue-400 font-normal text-sm cursor-pointer mt-4">
-        Size Guide
+      Size Guide
     </button>
 
     <div class="mt-6 space-y-3">
@@ -138,4 +159,5 @@
       >
     </div>
   </div>
+</div>
 </div>
