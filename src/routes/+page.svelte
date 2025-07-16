@@ -1,163 +1,181 @@
 <script lang="ts">
-  type Color = "violet" | "Black" | "greens";
-  type Size = "S" | "M" | "L" | "XL" | "XXL";
+  import { ChevronRight, ChevronLeft } from "@lucide/svelte";
+  import ProductCard from "$lib/components/product-card.svelte";
+  import { onMount } from "svelte";
 
-  let selectedColor: Color = "violet";
-  let selectedSize: Size = "S";
-  let quantity = 1;
-  let currentImageIndex = 0;
-
-  const colors: Color[] = ["violet", "Black", "greens"];
-  const sizes: Size[] = ["S", "M", "L", "XL", "XXL"];
-  const images = [
-    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2Fd0eb1756cebdb04301af62b1d4194451_voghion1200x1200.jpg",
-    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2F0e1a3ea6b60be52f0b09e42c38863e2d_voghion1200x1200.jpg",
-    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2F2babf19728331f9639b104c4d87e5472_voghion1200x1200.jpg",
-    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2Fde142310ac5aa0d434f85a3f3eb22610_voghion1200x1200.jpg",
+  const categories = [
+    { name: "Recommended", id: "recommended" },
+    { name: "Men’s Shorts", id: "men" },
+    { name: "Jerseys", id: "jerseys" },
+    { name: "Women's Bags", id: "woman" },
+    { name: "Men's Bags", id: "beg" },
+    { name: "Swimming, Diving & Water Sports", id: "sports" },
+    { name: "E-Scooter & E-Bike", id: "ebike" },
+    { name: "Makeup", id: "makeup" },
+    { name: "Skin Care", id: "skin-care" },
+    { name: "Wigs&Accs", id: "wing" },
+    { name: "Phone Cases", id: "case" },
+    { name: "Camping & Hiking", id: "camping" },
+    { name: "Accessories", id: "accessories" },
+    { name: "Sunscreen", id: "sunscreen" },
   ];
 
-  const selectImage = (index: number) => {
-    currentImageIndex = index;
+  const products = [
+    {
+      id: 1,
+      title: "Burgundy Loose Wave 99J Colored Wig 13x4 Transparent Lace Front Glueless Human Hair Wig Pre plucked Ready To Wear",
+      price: 24.99,
+      originalPrice: 39.99,
+      sold: 125,
+      rating: 5,
+      reviewCount: 36,
+      image: "https://g-images-process.voghion.com/?bucket=voghion&image=productImages%2Ff881addee1498649c4d312bf0a908bda_voghion1000x1000.jpg&format=webp&resize=%7B%22width%22%3A500%7D&fe=20250304",
+    },
+    {
+      id: 2,
+      title: "Women's Clothing Wedding Dress New Sexy Deep V Neck Fishtail Lace Wedding Dress",
+      price: 19.99,
+      originalPrice: 29.99,
+      sold: 89,
+      rating: 4.5,
+      reviewCount: 24,
+      image: "https://g-images-process.voghion.com/?bucket=voghion&image=productImages%2F3eb26afb906f10217170d67355b4d746_voghion800x800.png&format=webp&resize=%7B%22width%22%3A500%7D&fe=20250304",
+    },
+    {
+      id: 3,
+      title: "Women's Clothing Exquisite Solid Color Lace Up Ladies Dress",
+      price: 19.99,
+      originalPrice: 29.99,
+      sold: 89,
+      rating: 4.2,
+      reviewCount: 24,
+      image: "https://g-images-process.voghion.com/?bucket=voghion&image=productImages%2F401_1741247198966_voghion1800x1800.png&format=webp&resize=%7B%22width%22%3A500%7D&fe=20250304",
+    },
+    {
+      id: 4,
+      title: "Women's Clothing Casual Cotton And Linen Solid Color Shirt Drawstring Wide Leg Pants Suit",
+      price: 19.99,
+      originalPrice: 29.99,
+      sold: 89,
+      rating: 4.2,
+      reviewCount: 24,
+      image: "https://g-images-process.voghion.com/?bucket=voghion&image=productImages%2F217_1749707917043_voghion750x750.png&format=webp&resize=%7B%22width%22%3A500%7D&fe=20250304",
+    },
+    {
+      id: 5,
+      title: "Jerry Curly Short Pixie Bob Cut Human Hair Wigs With Bangs Glueless Wig Highlight Honey Water Wave Blonde Colored Wigs For Women",
+      price: 19.99,
+      originalPrice: 29.99,
+      sold: 89,
+      rating: 4.2,
+      reviewCount: 24,
+      image: "https://g-images-process.voghion.com/?bucket=voghion&image=productImages%2F81bc76e46513ff825ab260daac72b4c4_voghion960x960.jpg&format=webp&resize=%7B%22width%22%3A500%7D&fe=20250304",
+    },
+  ];
+
+  let selectedCategory = categories[0].id;
+  let showLeftArrow = false;
+  let showRightArrow = true;
+
+  const scrollCategories = (direction: "left" | "right") => {
+    const container = document.getElementById("categories-container");
+    if (!container) return;
+
+    const scrollAmount = 200;
+    const newScrollLeft =
+      direction === "right"
+        ? container.scrollLeft + scrollAmount
+        : container.scrollLeft - scrollAmount;
+
+    container.scrollTo({
+      left: newScrollLeft,
+      behavior: "smooth",
+    });
+
+    setTimeout(() => {
+      showLeftArrow = container.scrollLeft > 0;
+      showRightArrow =
+        container.scrollLeft < container.scrollWidth - container.clientWidth;
+    }, 300);
   };
+
+  const checkScrollPosition = () => {
+    const container = document.getElementById("categories-container");
+    if (!container) return;
+
+    showLeftArrow = container.scrollLeft > 0;
+    showRightArrow =
+      container.scrollLeft < container.scrollWidth - container.clientWidth;
+  };
+
+  onMount(() => {
+    checkScrollPosition();
+    window.addEventListener("resize", checkScrollPosition);
+    return () => window.removeEventListener("resize", checkScrollPosition);
+  });
 </script>
 
-<div class="max-w-7xl mx-auto px-4 py-8">
-
-<nav class="text-sm text-[#606266] mb-5">
-  <ol class="flex items-center space-x-2">
-    <li>
-      <a href="/" class="hover:underline">Home</a>
-    </li>
-    <li>
-      <span>›</span>
-    </li>
-    <li>
-      <a href="/womens-clothing" class="hover:underline text-gray-600"
-        >Women's Clothing</a
+<section class="py-16">
+  <div class="max-w-[1380px] mx-auto px-4">
+    <div class="flex justify-center items-center text-center flex-col mb-6">
+      <img
+        src="/assets/summer-sale.png"
+        alt="Summer Sale"
+        class="w-[433px] h-[50px] object-cover object-top"
+      />
+      <h2
+        class="text-xl md:text-[28px] tracking-[2px] font-arial-black font-bold text-[#333]"
       >
-    </li>
-    <li>
-      <span>›</span>
-    </li>
-    <li>Dress</li>
-  </ol>
-</nav>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-  <div class="flex flex-col md:flex-row gap-4">
-    <div class="flex md:flex-col gap-2">
-      {#each images as image, index}
-        <img
-          src={image}
-          alt="thumb"
-          class="thumbnail"
-          class:thumbnail-active={index === currentImageIndex}
-          on:click={() => selectImage(index)}
-        />
+        EXPLORE YOUR INTERESTS
+      </h2>
+    </div>
+
+    <div class="relative mb-10">
+      {#if showLeftArrow}
+        <button
+          on:click={() => scrollCategories("left")}
+          class="absolute cursor-pointer left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md z-10 hover:bg-gray-100 transition"
+          aria-label="Scroll left"
+        >
+          <ChevronLeft class="w-5 h-5 text-gray-700" />
+        </button>
+      {/if}
+
+      <div
+        id="categories-container"
+        class="flex overflow-x-auto scroll-smooth categories-scroll"
+        on:scroll={checkScrollPosition}
+      >
+        {#each categories as category}
+          <div class="flex-shrink-0">
+            <button
+              class:selected={selectedCategory === category.id}
+              class="font-roboto text-[20px] hover:text-primary text-text-primary rounded-full px-6 py-2 transition duration-300 ease-in-out cursor-pointer whitespace-nowrap"
+              on:click={() => (selectedCategory = category.id)}
+            >
+              {category.name}
+            </button>
+          </div>
+        {/each}
+      </div>
+
+      {#if showRightArrow}
+        <button
+          on:click={() => scrollCategories("right")}
+          class="absolute right-0 top-1/2 cursor-pointer transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md z-10 hover:bg-gray-100 transition"
+          aria-label="Scroll right"
+        >
+          <ChevronRight class="w-5 h-5 text-gray-700" />
+        </button>
+      {/if}
+    </div>
+
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"
+    >
+      {#each products as product}
+        <ProductCard {product} />
       {/each}
     </div>
-    <div class="w-full">
-      <img
-        src={images[currentImageIndex]}
-        alt="Main"
-        class="w-full h-auto object-cover rounded-md"
-      />
-      <div class="text-center text-blue-600 mt-2 cursor-pointer">Full View</div>
-    </div>
   </div>
-
-  <div>
-    <h1 class="text-xl font-bold">
-      Middle East cross border women's clothing Arab robe fashion sequin
-      embroidery chiffon two piece dress Europe and America
-    </h1>
-    <div
-      class="text-gray-500 text-xl font-normal mt-3 border-b border-gray-100 pb-5"
-    >
-      70 sold
-      <span class="text-yellow-400 ml-2">★ ★ ★ ★ ★</span>
-      <a href="#" class="text-gray-500 ml-1">(10 Reviews)</a>
-    </div>
-
-    <div class="text-3xl font-bold text-black mt-4">
-      $36.44 <span
-        class="line-through font-semibold text-gray-400 text-2xl ml-2"
-        >$66.23</span
-      >
-    </div>
-    <div
-      class="mt-2 flex items-center gap-3 text-orange-500 text-sm space-y-1 overflow-x-auto"
-    >
-      <div class="bg-red-50 px-2 py-1 shrink-0">
-        $291.65 OFF For orders $2,916.48
-      </div>
-      <div class="bg-red-50 px-2 py-1 shrink-0">
-        $233.32 OFF For orders $2,332.02
-      </div>
-      <div class="bg-red-50 px-2 py-1 shrink-0">$151.66 OFF For orders ...</div>
-    </div>
-
-    <div class="mt-6">
-      <label class="block text-gray-500 mb-3" for="color"
-        >colours: <span class="font-semibold text-gray-800"
-          >{selectedColor}</span
-        ></label
-      >
-      <div class="flex gap-2 flex-wrap">
-        {#each colors as color}
-          <button
-            class="px-3 py-1 border border-gray-300 rounded-full cursor-pointer text-sm capitalize transition"
-            class:btn-selected={selectedColor === color}
-            on:click={() => (selectedColor = color)}
-          >
-            {color}
-          </button>
-        {/each}
-      </div>
-    </div>
-
-    <div class="mt-6">
-      <label class="block text-gray-500 mb-3" for="size"
-        >size: <span class="font-semibold text-gray-800">{selectedSize}</span
-        ></label
-      >
-      <div class="flex gap-2 flex-wrap">
-        {#each sizes as size}
-          <button
-            class="px-6 py-1 border border-gray-300 cursor-pointer rounded-full text-sm"
-            class:btn-selected={selectedSize === size}
-            on:click={() => (selectedSize = size)}
-          >
-            {size}
-          </button>
-        {/each}
-      </div>
-    </div>
-
-    <div class="mt-6 flex items-center gap-2">
-      <label class="block text-gray-500 mb-1" for="quality">Quantity:</label>
-      <input
-        type="number"
-        min="1"
-        bind:value={quantity}
-        class="w-24 border border-gray-200 rounded px-2 py-1 text-gray-500 font-normal"
-        id="quality"
-      />
-    </div>
-
-    <button class="text-blue-400 font-normal text-sm cursor-pointer mt-4">
-      Size Guide
-    </button>
-
-    <div class="mt-6 space-y-3">
-      <button
-        class="w-full cursor-pointer bg-red-600 text-white py-3 rounded font-semibold hover:bg-red-700 transition"
-        >Buy It Now</button
-      >
-      <button
-        class="w-full cursor-pointer border border-gray-300 text-gray-800 py-3 rounded hover:bg-gray-50 transition"
-        >Add to cart</button
-      >
-    </div>
-  </div>
-</div>
-</div>
+</section>
