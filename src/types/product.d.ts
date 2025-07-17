@@ -8,3 +8,11 @@ interface Product {
   reviewCount: number;
   image: string;
 }
+
+interface Coupon {
+    id: number;
+    amount: number;
+    minOrder: number;
+    type: string;
+    expiry: string;
+}

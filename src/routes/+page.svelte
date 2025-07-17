@@ -116,7 +116,7 @@
 </script>
 
 <section class="py-16">
-  <div class="max-w-[1380px] mx-auto px-4">
+  <div class="container">
     <div class="flex justify-center items-center text-center flex-col mb-6">
       <img
         src="/assets/summer-sale.png"
@@ -124,7 +124,7 @@
         class="w-[433px] h-[50px] object-cover object-top"
       />
       <h2
-        class="text-xl md:text-[28px] tracking-[2px] font-arial-black font-bold text-[#333]"
+        class="text-xl md:text-[28px] tracking-[2px] font-arial-black font-bold text-text-primary"
       >
         EXPLORE YOUR INTERESTS
       </h2>
@@ -150,7 +150,7 @@
           <div class="flex-shrink-0">
             <button
               class:selected={selectedCategory === category.id}
-              class="font-roboto text-[20px] hover:text-primary text-text-primary rounded-full px-6 py-2 transition duration-300 ease-in-out cursor-pointer whitespace-nowrap"
+              class="font-roboto text-sm md:text-[20px] hover:text-primary text-text-primary rounded-full px-6 py-2 transition duration-300 ease-in-out cursor-pointer whitespace-nowrap"
               on:click={() => (selectedCategory = category.id)}
             >
               {category.name}

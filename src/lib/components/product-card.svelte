@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { Star } from "@lucide/svelte";
+  import StarRating from "$lib/components/rating.svelte";
 
   export let product: Product;
-  const fullStars = Math.floor(product.rating);
-  const hasHalfStar = product.rating % 1 >= 0.3 && product.rating % 1 <= 0.7;
-  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
 
 </script>
 
-<div
+<a
   class="relative font-roboto overflow-hidden h-full flex flex-col cursor-pointer transition-all duration-300 ease-in-out hover:shadow-[0_8px_32px_rgba(0,0,0,0.15)]"
+  href={`/${product.id}`}
 >
   <div class="relative pt-[100%] overflow-hidden rounded-lg">
     <img
@@ -41,28 +40,8 @@
         >
       {/if}
     </div>
-    <div class="text-[16px] text-text-secondary mb-1">{product.sold} sold</div>
-
-    <div class="flex items-center">
-      {#each Array(fullStars) as _, i}
-        <Star class="w-5 h-5 text-black fill-black" />
-      {/each}
-
-      {#if hasHalfStar}
-        <div class="relative w-4 h-4">
-          <Star class="absolute w-4 h-4 text-black fill-gray-200" />
-          <div class="absolute w-2 h-4 overflow-hidden">
-            <Star class="w-5 h-5 text-black fill-black" />
-          </div>
-        </div>
-      {/if}
-
-      {#each Array(emptyStars) as _, i}
-        <Star class="w-5 h-5 text-black fill-gray-200" />
-      {/each}
-
-      <span class="text-sm font-medium ml-1">{product.rating}</span>
-    </div>
+    <div class="text-[16px] text-text-grey mb-1">{product.sold} sold</div>
+      <StarRating rating={product.rating} showNumber={true} />
   </div>
   <button class=" cursor-pointer absolute bottom-4 right-6">
     <img
@@ -71,4 +50,4 @@
       class="w-[38px] h-[38px] object-cover"
     />
   </button>
-</div>
+</a>
