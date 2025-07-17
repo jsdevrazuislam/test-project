@@ -1,16 +1,25 @@
 <script lang="ts">
-  import { ChevronRight, ShareIcon } from "@lucide/svelte";
+  import { ChevronLeft, ChevronRight, ShareIcon } from "@lucide/svelte";
   import ImageGalleryModal from "$lib/components/image-gallery.svelte";
   import StarRating from "$lib/components/rating.svelte";
   import CouponModal from "$lib/components/coupon-modal.svelte";
   import CustomSelect from "$lib/components/ui/select.svelte";
   import { fade } from "svelte/transition";
   import toast from "svelte-french-toast";
+  import { createZoomImageHover } from "@zoom-image/core";
+  import { onMount, tick } from "svelte";
 
   let quantity = 1;
   let currentImageIndex = 0;
   let isModalOpen = false;
   let isModalCouponOpen = false;
+  let showShareBox = false;
+  let isCopied = false;
+  const itemId = "25951118";
+  const shareLink = `https://example.com/item/${itemId}`;
+  let imageHoverContainer: HTMLDivElement;
+  let zoomTarget: HTMLDivElement;
+  let zoomInstance: ReturnType<typeof createZoomImageHover> | null = null;
 
   const openModal = () => (isModalOpen = true);
   const onClose = () => (isModalOpen = false);
@@ -24,6 +33,25 @@
     isModalCouponOpen = false;
     document.body.style.overflow = "";
   };
+
+  async function initZoom() {
+    await tick();
+
+    if (zoomInstance) {
+      zoomInstance.cleanup();
+      zoomInstance = null;
+    }
+
+    if (imageHoverContainer && images[currentImageIndex]) {
+      zoomInstance = createZoomImageHover(imageHoverContainer, {
+        zoomImageSource: images[currentImageIndex],
+        customZoom: { width: 600, height: 500 },
+        zoomTarget,
+        scale: 2,
+        zoomLensClass: "custom-lens",
+      });
+    }
+  }
 
   const images = [
     "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2F4d9d474a11a6402e8dd490cb11b36174_voghion1601x1601.png",
@@ -41,12 +69,16 @@
 
   const selectImage = (index: number) => {
     currentImageIndex = index;
+    initZoom();
   };
 
-  let showShareBox = false;
-  let isCopied = false;
-  const itemId = "25951118";
-  const shareLink = `https://example.com/item/${itemId}`;
+  const nextImage = () => {
+    currentImageIndex = (currentImageIndex + 1) % images.length;
+  };
+
+  const prevImage = () => {
+    currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+  };
 
   const copyToClipboard = async () => {
     try {
@@ -70,6 +102,19 @@
       if (!isCopied) showShareBox = false;
     }, 300);
   };
+
+  onMount(() => {
+    initZoom();
+    return () => {
+      if (zoomInstance) {
+        zoomInstance.cleanup();
+      }
+    };
+  });
+
+  $: if (images.length && currentImageIndex >= 0) {
+    initZoom();
+  }
 </script>
 
 <section class="py-16 font-open-sans">
@@ -92,9 +137,9 @@
         <li>Dress</li>
       </ol>
     </nav>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8">
       <div class="flex flex-col md:flex-row gap-8">
-        <div class="flex relative md:flex-col gap-2">
+        <div class=" hidden md:flex relative md:flex-col gap-2">
           {#each images.slice(0, 5) as image, index}
             <button on:click={() => selectImage(index)}>
               <img
@@ -120,14 +165,21 @@
             </button>
           {/if}
         </div>
-        <div class="w-full relative">
+        <div
+          bind:this={imageHoverContainer}
+          class="w-full relative max-h-[600px] group"
+        >
           <img
             src={images[currentImageIndex]}
             alt="Main"
-            class="w-full h-auto object-cover rounded-md"
+            class="w-full h-full object-contain cursor-zoom-in rounded-md"
           />
+          <div
+            bind:this={zoomTarget}
+            class="absolute hidden group-hover:block z-[100] top-0 left-full bg-white border border-gray-100 shadow-[0px_0px_10px_#0000001a]"
+          ></div>
           <button
-            class="w-[75px] h-[75px] cursor-pointer absolute top-4 right-4"
+            class="w-[75px] h-[75px] absolute top-4 right-4"
             on:click={openModal}
           >
             <img
@@ -137,8 +189,20 @@
             />
           </button>
           <button
+            class="absolute md:hidden left-2 top-1/2 border transform -translate-y-1/2 bg-white/80 rounded-full p-2 shadow"
+            on:click={prevImage}
+          >
+            <ChevronLeft />
+          </button>
+          <button
+            class="absolute md:hidden right-2 top-1/2 border transform -translate-y-1/2 bg-white/80 rounded-full p-2 shadow"
+            on:click={nextImage}
+          >
+            <ChevronRight />
+          </button>
+          <button
             on:click={openModal}
-            class="text-center w-full text-blue-600 mt-2 cursor-pointer"
+            class="text-center hidden md:block text-lg w-full text-blue-600 mt-2 cursor-pointer"
           >
             Full View
           </button>
@@ -146,7 +210,7 @@
       </div>
 
       <div>
-        <h1 class="text-[22px] text-text-primary font-bold mb-10">
+        <h1 class="text-[22px] text-text-primary font-bold mb-6 lg:mb-10">
           Qianbihe Watch Pin Remover Adjustable Stainless Flexible with Slot
           Watch Band Tool for Home
         </h1>
@@ -304,6 +368,8 @@
         </div>
       </div>
     </div>
+
+    
   </div>
 
   <ImageGalleryModal

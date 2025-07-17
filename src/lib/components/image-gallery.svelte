@@ -72,7 +72,7 @@
           <img
             src={selectedImage}
             alt="Selected"
-            class="m-auto object-contain max-h-[500px] max-w-[500px]"
+            class="m-auto object-contain max-h-[500px] max-w-full lg:max-w-[500px]"
           />
         </div>
 

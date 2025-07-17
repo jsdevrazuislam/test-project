@@ -15,7 +15,7 @@
 
 @layer utilities {
 
-  .container{
+  .container {
     @apply !max-w-[1380px] mx-auto px-4
   }
 
@@ -73,4 +73,12 @@ body {
 
 .categories-scroll::-webkit-scrollbar {
   display: none;
+}
+
+.custom-lens {
+  background: rgba(33, 150, 243, .2);
+  border: 2px solid #2196f3;
+  pointer-events: none;
+  position: absolute;
+  z-index: 10;
 }
