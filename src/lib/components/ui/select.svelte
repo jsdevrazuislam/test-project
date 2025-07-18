@@ -1,5 +1,6 @@
 <script lang="ts">
   import { ChevronDown } from '@lucide/svelte';
+  import clsx from 'clsx';
   import { onMount } from 'svelte';
 
   export let options: {value: string, label: string}[] = [];
@@ -7,6 +8,7 @@
   export let value: string | number = "";
   export let searchable: boolean = true;
   export let className: string = ''
+  export let containerClass: string = ''
 
   let isOpen = false;
   let searchQuery = "";
@@ -82,7 +84,7 @@
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
   <div
-    class="flex items-center text-text-grey text-sm border border-gray-300 rounded-md px-3 py-1.5 focus-within:ring-1 focus-within:ring-primary focus-within:border-primary transition-all duration-200 cursor-text"
+    class={clsx(`flex items-center text-text-grey text-sm border border-gray-300 rounded-md px-3 py-1.5 focus-within:ring-1 focus-within:ring-primary focus-within:border-primary transition-all duration-200 cursor-text`, containerClass)}
     class:ring-2={isOpen}
     class:ring-blue-500={isOpen}
     class:border-blue-500={isOpen}
