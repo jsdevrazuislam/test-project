@@ -9,6 +9,14 @@ interface Product {
   image: string;
 }
 
+interface SimilarProduct{
+    id: number;
+    image: string;
+    title: string;
+    price: number;
+    sold: number;
+}
+
 interface Coupon {
     id: number;
     amount: number;

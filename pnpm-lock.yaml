@@ -20,6 +20,9 @@ importers:
       '@zoom-image/svelte':
         specifier: latest
         version: 0.3.4(svelte@5.36.2)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       svelte-french-toast:
         specifier: ^1.2.0
         version: 1.2.0(svelte@5.36.2)

@@ -12,7 +12,7 @@
   export let gap: string = '';
 
   $: fullStars = Math.floor(rating);
-  $: hasHalfStar = rating % 1 >= 0.3 && rating % 1 <= 0.7;
+  $: hasHalfStar = rating % 1 !== 0;
   $: emptyStars = Math.max(0, maxStars - fullStars - (hasHalfStar ? 1 : 0));
 
   const handleClick = (index: number) => {

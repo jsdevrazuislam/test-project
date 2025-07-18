@@ -8,6 +8,11 @@
   import toast from "svelte-french-toast";
   import { createZoomImageHover } from "@zoom-image/core";
   import { onMount, tick } from "svelte";
+  import SimilarItems from "$lib/components/similar-items.svelte";
+  import ShipingInfo from "$lib/components/shiping-info.svelte";
+  import ProductDescription from "$lib/components/product-description.svelte";
+  import ProductReviews from "$lib/components/product-reviews.svelte";
+  import RecentProduct from "$lib/components/recent-product.svelte";
 
   let quantity = 1;
   let currentImageIndex = 0;
@@ -368,8 +373,13 @@
         </div>
       </div>
     </div>
-
-    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-0 mt-8">
+      <SimilarItems />
+      <ShipingInfo />
+    </div>
+    <ProductDescription />
+    <ProductReviews />
+    <RecentProduct />
   </div>
 
   <ImageGalleryModal
