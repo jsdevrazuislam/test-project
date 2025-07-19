@@ -1,92 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 @import "tailwindcss";
 
+@layer base {
+    * {
+        border-color: var(--color-gray-200);
+    }
 
-@theme inline {
-  --color-primary: #fcc00f;
-  --color-secondary: #fa6338;
-  --color-button: #d6201a;
-  --color-text-primary: #333;
-  --color-text-secondary: #303133;
-  --color-text-grey: #666;
-  --color-text-light-grey: #606266;
+    .icosea_global_cls {
+        display: inline-block;
+    }
 }
 
+@theme {
+    --font-sans: "Open sans", sans-serif;
+    --font-headline: "Roboto", "open sans", sans-serif;
+    --color-fg-primary: #333333;
+}
 
-@layer utilities {
+@utility container {
+    padding-inline: 1rem;
+    margin-inline: auto;
+    max-width: 1528px;
+}
 
-  .container {
-    @apply !max-w-[1380px] mx-auto px-4
-  }
-
-  button.selected {
-    @apply border border-black font-semibold
-  }
-
-  .thumbnail {
-    @apply w-[65px] h-[65px] object-cover rounded-md cursor-pointer transition;
-  }
-
-  .thumbnail-active {
-    @apply ring-2 ring-black;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar {
-    @apply h-1;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-gray-100 rounded-full;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-gray-400 rounded-full;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-500;
-  }
-
-  .scrollbar-hide::-webkit-scrollbar {
-    @apply hidden h-[2px]
-  }
-
-  .hover\:scrollbar-default:hover::-webkit-scrollbar {
-    @apply block
-  }
-
-  .hover\:scrollbar-default::-webkit-scrollbar-track {
-    @apply bg-white rounded-[4px]
-  }
-
-  .hover\:scrollbar-default::-webkit-scrollbar-thumb {
-    @apply bg-[#c8c9cb] rounded-[4px]
-  }
-
-  .hover\:scrollbar-default::-webkit-scrollbar-thumb:hover {
-    @apply bg-[#555]
-  }
-
-  .scrollbar-none {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-
-    &::-webkit-scrollbar {
-      display: none;
+@layer components {
+    .btn-black {
+        @apply bg-black px-4 py-1.5 text-white hover:bg-black/75 active:bg-black/90;
     }
-  }
-
-  .font-arial-black {
-    font-family: Arial Black;
-  }
-
-  .font-open-sans {
-    font-family: "Open Sans", sans-serif;
-  }
-
-  .font-roboto {
-    font-family: "Roboto", sans-serif;
-  }
 }
 
 body {
