@@ -81,7 +81,7 @@
     },
   ];
 
-  let selectedCategory = categories[0].id;
+  let selectedCategory: string = $state(categories[0].id);
 </script>
 
 <section class="py-16">
@@ -101,7 +101,7 @@
 
     <CategoryCarousel
       {categories}
-      bind:selectedCategory
+      {selectedCategory}
       selectedClass="border-2 border-black"
     />
 

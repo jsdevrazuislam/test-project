@@ -2,60 +2,55 @@
   import { ChevronLeft, ChevronRight } from "@lucide/svelte";
   import { onMount } from "svelte";
 
-  export let categories: Array<{ id: string; name: string }> = [];
-  export let selectedCategory: string = "";
-  export let buttonClass: string =
-    "font-roboto text-sm md:text-[20px] hover:text-primary text-text-primary rounded-full px-6 py-2";
-  export let selectedClass: string = "border-2 border-black";
-  export let arrowClass: string = "w-5 h-5 text-gray-700";
-  export let containerClass: string = "";
+  let {
+    categories = [],
+    selectedCategory = "",
+    buttonClass = "font-roboto text-sm md:text-[20px] hover:text-primary text-text-primary rounded-full px-6 py-2",
+    selectedClass = "border-2 border-black",
+    arrowClass = "w-5 h-5 text-gray-700",
+    containerClass = ""
+  } = $props();
 
-  let showLeftArrow = false;
-  let showRightArrow = true;
-  let categoriesContainer: HTMLDivElement;
+  let showLeftArrow = $state(false);
+  let showRightArrow = $state(true);
+  let categoriesContainer = $state<HTMLDivElement>();
 
   const scrollCategories = (direction: "left" | "right") => {
-    const container = document.getElementById("categories-container");
-    if (!container) return;
+    if (!categoriesContainer) return;
 
     const scrollAmount = 200;
-    const newScrollLeft =
-      direction === "right"
-        ? container.scrollLeft + scrollAmount
-        : container.scrollLeft - scrollAmount;
+    const newScrollLeft = direction === "right"
+      ? categoriesContainer.scrollLeft + scrollAmount
+      : categoriesContainer.scrollLeft - scrollAmount;
 
-    container.scrollTo({
+    categoriesContainer.scrollTo({
       left: newScrollLeft,
-      behavior: "smooth",
+      behavior: "smooth"
     });
 
-    setTimeout(() => {
-      showLeftArrow = container.scrollLeft > 0;
-      showRightArrow =
-        container.scrollLeft < container.scrollWidth - container.clientWidth;
-    }, 300);
+    setTimeout(checkScrollPosition, 300);
   };
 
   const checkScrollPosition = () => {
-    const container = document.getElementById("categories-container");
-    if (!container) return;
+    if (!categoriesContainer) return;
 
-    showLeftArrow = container.scrollLeft > 0;
-    showRightArrow =
-      container.scrollLeft < container.scrollWidth - container.clientWidth;
+    showLeftArrow = categoriesContainer.scrollLeft > 0;
+    showRightArrow = categoriesContainer.scrollLeft < 
+      categoriesContainer.scrollWidth - categoriesContainer.clientWidth;
   };
 
   onMount(() => {
     checkScrollPosition();
-    window.addEventListener("resize", checkScrollPosition);
-    return () => window.removeEventListener("resize", checkScrollPosition);
+    const resizeHandler = () => checkScrollPosition();
+    window.addEventListener("resize", resizeHandler);
+    return () => window.removeEventListener("resize", resizeHandler);
   });
 </script>
 
 <div class={`relative mb-10 ${containerClass}`}>
   {#if showLeftArrow}
     <button
-      on:click={() => scrollCategories("left")}
+      onclick={() => scrollCategories("left")}
       class="absolute cursor-pointer left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md z-10 hover:bg-gray-100 transition"
       aria-label="Scroll left"
     >
@@ -66,14 +61,14 @@
   <div
     bind:this={categoriesContainer}
     id="categories-container"
-    class="flex overflow-x-auto scroll-smooth categories-scroll"
-    on:scroll={checkScrollPosition}
+    class="flex overflow-x-auto scroll-smooth scrollbar-none"
+    onscroll={checkScrollPosition}
   >
     {#each categories as category}
       <div class="flex-shrink-0">
         <button
           class={`${buttonClass} ${selectedCategory === category.id ? selectedClass : ""} cursor-pointer`}
-          on:click={() => (selectedCategory = category.id)}
+          onclick={() => (selectedCategory = category.id)}
           aria-label={`Select ${category.name}`}
           aria-current={selectedCategory === category.id ? "page" : undefined}
         >
@@ -85,7 +80,7 @@
 
   {#if showRightArrow}
     <button
-      on:click={() => scrollCategories("right")}
+      onclick={() => scrollCategories("right")}
       class="absolute right-0 top-1/2 cursor-pointer transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md z-10 hover:bg-gray-100 transition"
       aria-label="Scroll right"
     >

@@ -1,9 +1,11 @@
 <script lang="ts">
-  export let label: string;
-  export let bindChecked: boolean = false;
-  export let required: boolean = false;
-  export let linkText: string = "";
-  export let linkHref: string = "";
+   let {
+    label = "",
+    bindChecked = false,
+    required = false,
+    linkText = "",
+    linkHref = ""
+  } = $props();
 </script>
 
 <label class="flex items-start cursor-pointer group font-roboto text-[12px] mb-2">
@@ -11,7 +13,8 @@
     <input
       type="checkbox"
       bind:checked={bindChecked}
-      class="appearance-none w-4 h-4 border-1 border-gray-200 hover:border-none rounded-full checked:bg-black transition-colors duration-200"
+      class="appearance-none focus:shadow-[0_0_0_2px_rgba(0,0,0,0.1)]
+    hover:not-checked:border-[#9ca3af] w-4 h-4 border-1 border-gray-200 hover:border-none rounded-full checked:bg-black transition-colors duration-200"
       {required}
     />
     {#if bindChecked}
@@ -47,13 +50,3 @@
     {/if}
   </div>
 </label>
-
-<style>
-  input[type="checkbox"]:focus {
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-  }
-
-  input[type="checkbox"]:not(:checked):hover {
-    border-color: #9ca3af;
-  }
-</style>

@@ -1,12 +1,14 @@
 <script lang="ts">
   import clsx from "clsx";
-  export let product: SimilarProduct;
-  export let titleClass: string = ''
-  export let priceClass: string = ''
-  export let soldClass: string = ''
-  export let discountClass: string = ''
-  export let contentClass: string = ''
-  export let containerClass: string = ''
+  let {
+    product,
+    titleClass = '',
+    priceClass = '',
+    soldClass = '',
+    discountClass = '',
+    contentClass = '',
+    containerClass = ''
+  } = $props();
 </script>
 
 <a

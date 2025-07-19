@@ -6,19 +6,28 @@
   import Select from "$lib/components/ui/select.svelte";
   import LanguageSwitcher from "$lib/components/language-switcher.svelte";
 
-  let isOpen = false;
-  let activeTab: "email" | "phone" = "email";
-  let email = "";
-  let password = "";
-  let phoneNumber = "";
-  let countryCode = "US+1";
-  let acceptTerms = true;
-  let newsletter = true;
-  let cookies = true;
-  let smsConsent = true;
-  let noSms = false;
+  let isOpen = $state(false);
+  let activeTab = $state<"email" | "phone">("email");
+  let email = $state("");
+  let password = $state("");
+  let phoneNumber = $state("");
+  let countryCode = $state("US+1");
+  let acceptTerms = $state(true);
+  let newsletter = $state(true);
+  let cookies = $state(true);
+  let smsConsent = $state(true);
+  let noSms = $state(false);
 
-  const toggleModal = () => (isOpen = !isOpen);
+  const toggleModal = () => {
+    isOpen = !isOpen;
+    if (!isOpen) {
+      activeTab = "email";
+      email = "";
+      password = "";
+      phoneNumber = "";
+      countryCode = "US+1";
+    }
+  };
 
   const setActiveTab = (tab: "email" | "phone") => {
     activeTab = tab;
@@ -42,7 +51,7 @@
     <div class="py-4 flex justify-between items-center">
       <p class="text-sm text-text-grey">
         Hi, <button
-          on:click={toggleModal}
+          onclick={toggleModal}
           class="text-blue-600 font-semibold cursor-pointer"
           >Sign in / Register</button
         >
@@ -57,16 +66,16 @@
       <div
         transition:fade={{ duration: 150 }}
         class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
-        on:click={toggleModal}
+        onclick={toggleModal}
       >
         <div
           transition:scale={{ duration: 150 }}
-          on:click|stopPropagation
+          onclick={(e) => { e.stopPropagation()}}
           class="bg-white rounded-lg px-6 py-4 shadow-xl w-full max-w-[450px] overflow-y-auto max-h-[90vh]"
         >
           <div class="flex justify-end items-end mt-3">
             <button
-              on:click={toggleModal}
+              onclick={toggleModal}
               class="p-1 font-bold cursor-pointer rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400"
               aria-label="Close modal"
             >
@@ -83,8 +92,8 @@
 
             {#if activeTab === "phone"}
               <button
-                on:click={() => setActiveTab("email")}
-                class="w-[50px] cursor-pointer absolute -top-12 left-2 h-[50px] hover:bg-gray-100 rounded-md cursor-pointer flex justify-center items-center"
+                onclick={() => setActiveTab("email")}
+                class="w-[50px] absolute -top-12 left-2 h-[50px] hover:bg-gray-100 rounded-md cursor-pointer flex justify-center items-center"
               >
                 <ChevronLeft />
               </button>
@@ -104,30 +113,26 @@
                       containerClass="h-[50px]"
                     />
                     <Input
-                      inputProps={{
-                        type: "tel",
-                        bindValue: phoneNumber,
-                        placeholder: "Please input phone number",
-                        required: false,
-                      }}
+                      type="tel"
+                      bindValue={phoneNumber}
+                      placeholder="Please input phone number"
+                      required={false}
                     />
                   </div>
                 </div>
               </div>
             {:else}
               <Input
-                inputProps={{
-                  type: "email",
-                  label: "Email",
-                  bindValue: email,
-                  placeholder: "Please input email",
-                  required: true,
-                }}
+                type="email"
+                label="Email"
+                bindValue={email}
+                placeholder="Please input phone number"
+                required={true}
               />
             {/if}
 
             <button
-              on:click={handleSubmit}
+              onclick={handleSubmit}
               class="w-full mt-6 bg-primary hover:bg-primary/80 text-text-primary text-2xl py-2 px-4 transition-colors font-roboto cursor-pointer rounded-full"
             >
               Continue
@@ -178,7 +183,7 @@
                 </button>
                 <button
                   type="button"
-                  on:click={() => setActiveTab("phone")}
+                  onclick={() => setActiveTab("phone")}
                   class="flex items-center justify-center p-4 border border-gray-200 rounded-full text-sm font-medium text-gray-700 hover:bg-primary/15 cursor-pointer"
                 >
                   <img

@@ -2,9 +2,15 @@
   import { fade, scale } from "svelte/transition";
   import { X } from "@lucide/svelte";
   import { onMount } from "svelte";
+  interface Props{
+    isModalOpen: boolean
+    closeModal: () => void
+  }
 
-  export let isModalOpen: boolean = false;
-  export let closeModal: () => void = () => {};
+  let {
+    isModalOpen,
+    closeModal
+  }: Props = $props();
 
   const coupons = [
     {
@@ -46,11 +52,11 @@
   <div
     transition:fade
     class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
-    on:click={closeModal}
+    onclick={closeModal}
   >
     <div
       transition:scale={{ start: 0.95 }}
-      on:click|stopPropagation
+      onclick={(e) => { e.stopPropagation()}}
       class="bg-white rounded-lg shadow-xl max-w-[400px] w-full p-4 max-h-[90vh] overflow-y-auto"
     >
       <div class="flex justify-between items-center mb-6">
@@ -59,7 +65,7 @@
           Available coupons
         </h3>
         <button
-          on:click={closeModal}
+          onclick={closeModal}
           class="p-1 rounded-full hover:bg-gray-100 cursor-pointer"
           aria-label="Close coupon modal"
         >
@@ -68,7 +74,7 @@
       </div>
 
       {#each coupons as coupon}
-        <div class={`coupon mb-4 flex justify-between items-center`}>
+        <div class={`[border-image-source:url('/assets/coupon-bg.png')] [border-image-slice:49.9%_49.9%_49.9%_40%] [border-image-width:auto] mb-4 flex justify-between items-center`}>
           <div class="px-4 py-2 ml-[50px]">
             <div class="text-[24px] text-primary">$ {coupon.amount}</div>
             <div class="text-[12px] text-text-primary">
@@ -89,11 +95,3 @@
     </div>
   </div>
 {/if}
-
-<style>
-  .coupon {
-    border-image-source: url("/assets/coupon-bg.png");
-    border-image-slice: 49.9% 49.9% 49.9% 40%;
-    border-image-width: auto;
-  }
-</style>

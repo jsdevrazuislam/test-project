@@ -1,9 +1,11 @@
 <script lang="ts">
   import StarRating from "$lib/components/rating.svelte";
 
-  export let product: Product;
+  interface Props {
+    product: Product;
+  }
 
-
+  let { product }: Props = $props();
 </script>
 
 <a
@@ -41,7 +43,7 @@
       {/if}
     </div>
     <div class="text-[16px] text-text-grey mb-1">{product.sold} sold</div>
-      <StarRating rating={product.rating} showNumber={true} />
+    <StarRating rating={product.rating} showNumber={true} />
   </div>
   <button class=" cursor-pointer absolute bottom-4 right-6">
     <img

@@ -14,20 +14,36 @@
   import ProductReviews from "$lib/components/product-reviews.svelte";
   import RecentProduct from "$lib/components/recent-product.svelte";
 
-  let quantity = 1;
-  let currentImageIndex = 0;
-  let isModalOpen = false;
-  let isModalCouponOpen = false;
-  let showShareBox = false;
-  let isCopied = false;
+   const images = [
+    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2F4d9d474a11a6402e8dd490cb11b36174_voghion1601x1601.png",
+    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2Ff657bd5dc1fe4b29a19ba2e31b88214e_voghion1601x1601.png",
+    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2Fdbada6eb2b014282ba34b4bfea5be383_voghion1601x1601.png",
+    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2F3578c395bc48858ac1cbe52b6210583a_voghion1601x1601.jpg",
+    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2Fbbd505706196459cad999f4d25896165_voghion1601x1601.png",
+    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2F656dc8d0a9be41caafff871d95089494_voghion1601x1601.png",
+    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2Fd8f9ffa4337c4797942b9ed37e10bb44_voghion1601x1601.png",
+    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2F62a193b830f04ccd87829cdeea6b2ad7_voghion1601x1601.png",
+    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2F2e21bcb14bc18f637559956fe598a561_voghion1601x1601.jpg",
+    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2F13aad3428ad241a6ad727e99570c481b_voghion1601x1601.png",
+    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2Fa750fb08756b4aa7abf2a23023f5929b_voghion1601x1601.png",
+  ];
+
+  let quantity = $state("1");
+  let currentImageIndex = $state(0);
+  let isModalOpen = $state(false);
+  let isModalCouponOpen = $state(false);
+  let showShareBox = $state(false);
+  let isCopied = $state(false);
+  let imageHoverContainer = $state<HTMLDivElement>();
+  let zoomTarget = $state<HTMLDivElement>();
+  let zoomInstance = $state<ReturnType<typeof createZoomImageHover> | null>(null);
+  let hoverTimeout = $state<number>();
+
   const itemId = "25951118";
   const shareLink = `https://example.com/item/${itemId}`;
-  let imageHoverContainer: HTMLDivElement;
-  let zoomTarget: HTMLDivElement;
-  let zoomInstance: ReturnType<typeof createZoomImageHover> | null = null;
 
-  const openModal = () => (isModalOpen = true);
-  const onClose = () => (isModalOpen = false);
+  const openModal = () => isModalOpen = true;
+  const onClose = () => isModalOpen = false;
 
   const openCouponModal = () => {
     isModalCouponOpen = true;
@@ -41,36 +57,21 @@
 
   async function initZoom() {
     await tick();
-
     if (zoomInstance) {
       zoomInstance.cleanup();
       zoomInstance = null;
     }
-
+    if(!zoomTarget) return
     if (imageHoverContainer && images[currentImageIndex]) {
       zoomInstance = createZoomImageHover(imageHoverContainer, {
         zoomImageSource: images[currentImageIndex],
         customZoom: { width: 600, height: 500 },
         zoomTarget,
         scale: 2,
-        zoomLensClass: "custom-lens",
+        zoomLensClass: "bg-[rgba(33,150,243,0.2)] border-2 border-[#2196f3] pointer-events-none absolute z-10",
       });
     }
   }
-
-  const images = [
-    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2F4d9d474a11a6402e8dd490cb11b36174_voghion1601x1601.png",
-    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2Ff657bd5dc1fe4b29a19ba2e31b88214e_voghion1601x1601.png",
-    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2Fdbada6eb2b014282ba34b4bfea5be383_voghion1601x1601.png",
-    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2F3578c395bc48858ac1cbe52b6210583a_voghion1601x1601.jpg",
-    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2Fbbd505706196459cad999f4d25896165_voghion1601x1601.png",
-    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2F656dc8d0a9be41caafff871d95089494_voghion1601x1601.png",
-    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2Fd8f9ffa4337c4797942b9ed37e10bb44_voghion1601x1601.png",
-    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2F62a193b830f04ccd87829cdeea6b2ad7_voghion1601x1601.png",
-    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2F2e21bcb14bc18f637559956fe598a561_voghion1601x1601.jpg",
-    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2F13aad3428ad241a6ad727e99570c481b_voghion1601x1601.png",
-    "https://g-images-process.voghion.com/?bucket=voghion&resize=%7B%22width%22%3A800%7D&image=productImages%2Fa750fb08756b4aa7abf2a23023f5929b_voghion1601x1601.png",
-  ];
 
   const selectImage = (index: number) => {
     currentImageIndex = index;
@@ -89,13 +90,11 @@
     try {
       await navigator.clipboard.writeText(shareLink);
       toast.success("copy successfully");
-      setTimeout(() => (isCopied = false), 2000);
+      setTimeout(() => isCopied = false, 2000);
     } catch (err) {
       console.error("Failed to copy:", err);
     }
   };
-
-  let hoverTimeout: number;
 
   const handleMouseEnter = () => {
     clearTimeout(hoverTimeout);
@@ -108,6 +107,7 @@
     }, 300);
   };
 
+  // Lifecycle
   onMount(() => {
     initZoom();
     return () => {
@@ -117,9 +117,12 @@
     };
   });
 
-  $: if (images.length && currentImageIndex >= 0) {
-    initZoom();
-  }
+  // Reactivity
+  $effect(() => {
+    if (images.length && currentImageIndex >= 0) {
+      initZoom();
+    }
+  });
 </script>
 
 <section class="py-16 font-open-sans">
@@ -146,7 +149,7 @@
       <div class="flex flex-col md:flex-row gap-8">
         <div class=" hidden md:flex relative md:flex-col gap-2">
           {#each images.slice(0, 5) as image, index}
-            <button on:click={() => selectImage(index)}>
+            <button onclick={() => selectImage(index)}>
               <img
                 src={image}
                 alt="thumb"
@@ -158,7 +161,7 @@
           {#if images.length > 6}
             <button
               class="w-[65px] relative rounded-xl h-[65px] overflow-hidden text-[18px] cursor-pointer"
-              on:click={openModal}
+              onclick={openModal}
             >
               <img src={images[6]} alt="thumb" class="w-ful h-full" />
 
@@ -185,7 +188,7 @@
           ></div>
           <button
             class="w-[75px] h-[75px] absolute top-4 right-4"
-            on:click={openModal}
+            onclick={openModal}
           >
             <img
               src="/assets/expand.png"
@@ -195,18 +198,18 @@
           </button>
           <button
             class="absolute md:hidden left-2 top-1/2 border transform -translate-y-1/2 bg-white/80 rounded-full p-2 shadow"
-            on:click={prevImage}
+            onclick={prevImage}
           >
             <ChevronLeft />
           </button>
           <button
             class="absolute md:hidden right-2 top-1/2 border transform -translate-y-1/2 bg-white/80 rounded-full p-2 shadow"
-            on:click={nextImage}
+            onclick={nextImage}
           >
             <ChevronRight />
           </button>
           <button
-            on:click={openModal}
+            onclick={openModal}
             class="text-center hidden md:block text-lg w-full text-blue-600 mt-2 cursor-pointer"
           >
             Full View
@@ -233,13 +236,13 @@
           </div>
           <div
             class="relative inline-block"
-            on:mouseenter={handleMouseEnter}
-            on:mouseleave={handleMouseLeave}
+            onmouseenter={handleMouseEnter}
+            onmouseleave={handleMouseLeave}
             role="button"
             tabindex="0"
             aria-haspopup="dialog"
             aria-expanded={showShareBox}
-            on:keydown={(e) => {
+            onkeydown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 showShareBox = !showShareBox;
@@ -261,7 +264,7 @@
                 <div class="flex items-center justify-between">
                   <div class="mb-2">Item ID: {itemId}</div>
                   <button
-                    on:click={copyToClipboard}
+                    onclick={copyToClipboard}
                     class="ml-2 px-2 py-0.5 cursor-pointer rounded border border-gray-400 transition-colors"
                     aria-label="Copy link"
                   >
@@ -271,7 +274,7 @@
                 <div class="flex justify-center items-center mt-2">
                   <button
                     class="w-[210px] cursor-pointer py-2 rounded-full bg-primary transition-all duration-300 ease-in-out hover:bg-yellow-300 text-text-primary"
-                    on:click={() => toast.success("copy successfully")}
+                    onclick={() => toast.success("copy successfully")}
                   >
                     Share Link
                   </button>
@@ -291,26 +294,26 @@
           class="mt-2 scroll-smooth pb-1 h-[45px] flex items-center gap-3 text-orange-500 text-sm space-y-1 overflow-x-auto scrollbar-hide hover:scrollbar-default relative"
         >
           <button
-            on:click={openCouponModal}
+            onclick={openCouponModal}
             class="bg-red-50 px-2 py-1 shrink-0 cursor-pointer"
           >
             $291.65 OFF For orders $2,916.48
           </button>
           <button
-            on:click={openCouponModal}
+            onclick={openCouponModal}
             class="bg-red-50 px-2 py-1 shrink-0 cursor-pointer"
           >
             $233.32 OFF For orders $2,332.02
           </button>
           <button
-            on:click={openCouponModal}
+            onclick={openCouponModal}
             class="bg-red-50 px-2 py-1 shrink-0 cursor-pointer"
           >
             $ 151.26 OFF For orders $ 1,511.43
           </button>
         </div>
         <CouponModal
-          bind:isModalOpen={isModalCouponOpen}
+          isModalOpen={isModalCouponOpen}
           closeModal={closeCouponModal}
         />
 
@@ -320,7 +323,7 @@
 
         <div class="mt-3">
           <button
-            on:click={() => selectImage(1)}
+            onclick={() => selectImage(1)}
             class="w-[78px] h-[78px] border-2 border-black cursor-pointer"
           >
             <img
@@ -383,34 +386,9 @@
   </div>
 
   <ImageGalleryModal
-    bind:isOpen={isModalOpen}
+    isOpen={isModalOpen}
     {images}
     title="Qianbihe Watch Pin Remover Adjustable Stainless Flexible with Slot Watch Band Tool for Home"
     {onClose}
   />
 </section>
-
-<style>
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-    height: 2px;
-  }
-
-  .hover\:scrollbar-default:hover::-webkit-scrollbar {
-    display: block;
-  }
-
-  .hover\:scrollbar-default::-webkit-scrollbar-track {
-    background: white;
-    border-radius: 4px;
-  }
-
-  .hover\:scrollbar-default::-webkit-scrollbar-thumb {
-    background: #c8c9cb;
-    border-radius: 4px;
-  }
-
-  .hover\:scrollbar-default::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-</style>

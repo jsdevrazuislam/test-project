@@ -2,13 +2,21 @@
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
 
-  export let images: string[] = [];
-  export let title: string = "";
-  export let isOpen: boolean = false;
-  export let onClose: () => void = () => {};
+  interface Props{
+    images: string[]
+    title: string
+    isOpen: boolean
+    onClose: () => void
+  }
+  let {
+    images = [],
+    title = "",
+    isOpen = false,
+    onClose = () => {}
+  } : Props = $props();
 
-  let selectedIndex = 0;
-  $: selectedImage = images[selectedIndex];
+  let selectedIndex = $state(0);
+  const selectedImage = $derived(images[selectedIndex]);
 
   const selectImage = (index: number) => {
     selectedIndex = index;
@@ -43,8 +51,8 @@
   <div
     class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
     transition:fade={{ duration: 200 }}
-    on:click={handleOverlayClick}
-    on:keydown={handleOverlayKeydown}
+    onclick={handleOverlayClick}
+    onkeydown={handleOverlayKeydown}
     role="dialog"
     aria-modal="true"
     aria-label="Image gallery"
@@ -56,7 +64,7 @@
       out:fly={{ y: -50, duration: 200 }}
     >
       <button
-        on:click={onClose}
+        onclick={onClose}
         class="text-black z-10 cursor-pointer absolute right-4 top-4 text-xl hover:text-red-500"
         >✕</button
       >
@@ -85,7 +93,7 @@
 
           <div class="grid grid-cols-4 gap-2">
             {#each images as image, i}
-              <button on:click={() => selectImage(i)}>
+              <button onclick={() => selectImage(i)}>
                 <img
                   src={image}
                   alt="Thumb"

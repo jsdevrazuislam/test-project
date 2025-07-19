@@ -2,10 +2,10 @@
   import { fade } from "svelte/transition";
   import Radio from "$lib/components/ui/radio.svelte";
 
-  let showSwitcher = false;
-  let selectedOption = "English";
-  let hoverTimeout: number;
-  let isMouseInSwitcher = false;
+  let showSwitcher = $state(false);
+  let selectedOption = $state("English");
+  let hoverTimeout = $state<number>();
+  let isMouseInSwitcher = $state(false);
 
   const handleMouseEnter = () => {
     clearTimeout(hoverTimeout);
@@ -33,11 +33,12 @@
   };
 </script>
 
+
 <div class="relative font-roboto">
   <button
     class="flex items-center gap-2 leading-4 text-text-primary font-semibold text-sm"
-    on:mouseenter={handleMouseEnter}
-    on:mouseleave={handleMouseLeave}
+    onmouseenter={handleMouseEnter}
+    onmouseleave={handleMouseLeave}
     tabindex="0"
     aria-haspopup="dialog"
     aria-expanded={showSwitcher}
@@ -55,21 +56,21 @@
     <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
       transition:fade
-      on:mouseenter={handleSwitcherEnter}
-      on:mouseleave={handleSwitcherLeave}
+      onmouseenter={handleSwitcherEnter}
+      onmouseleave={handleSwitcherLeave}
       class="absolute z-[50] top-full right-0 transform translate-x-[14%] mb-2 bg-white shadow-lg rounded-md p-4 w-[240px] border border-gray-200 text-[18px] text-text-grey"
     >
       <h3 class="text-text-primary font-semibold text-[16px] mb-4">Language</h3>
       <Radio
         name="options"
         value="English"
-        bind:selected={selectedOption}
+        selected={selectedOption}
         label="English"
       />
       <Radio
         name="options"
         value="Español"
-        bind:selected={selectedOption}
+        selected={selectedOption}
         label="Español"
       />
       <div class="w-full h-[1px] bg-gray-200 mt-4 mb-2"></div>
@@ -77,19 +78,19 @@
       <Radio
         name="options"
         value="US Dollar ($ )"
-        bind:selected={selectedOption}
+        selected={selectedOption}
         label="US Dollar ($ )"
       />
       <Radio
         name="options"
         value="Euro (€)"
-        bind:selected={selectedOption}
+        selected={selectedOption}
         label="Euro (€)"
       />
       <Radio
         name="options"
         value="United Kingdom Pound (£)"
-        bind:selected={selectedOption}
+        selected={selectedOption}
         label="United Kingdom Pound (£)"
       />
       <div class="w-full h-[1px] bg-gray-200 mt-4 mb-4"></div>

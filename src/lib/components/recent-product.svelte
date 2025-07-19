@@ -94,7 +94,7 @@
     },
   ];
 
-  let selectedCategory: string = categories[0].id;
+  let selectedCategory: string = $state(categories[0].id);
 </script>
 
 <section class="mt-8">
@@ -103,7 +103,7 @@
   </h3>
   <CategoryCarousel
     {categories}
-    bind:selectedCategory
+    {selectedCategory}
     selectedClass="border-2 border-black"
   />
   <div class="flex overflow-x-auto scroll-smooth gap-2 mt-6 pb-6">

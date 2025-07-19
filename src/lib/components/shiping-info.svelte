@@ -3,7 +3,7 @@
   import { onMount } from "svelte";
   import { fade, scale } from "svelte/transition";
 
-  let isReportModalOpen: boolean = false;
+  let isReportModalOpen: boolean = $state(false);
 
   const paymentMethods = [
     { image: "/assets/payments/paypal.webp", alt: "PayPal" },
@@ -71,7 +71,7 @@
 <div class="h-fit lg:px-10">
   <button
     class="flex items-center text-[#3b7f34] mb-4 bg-[#f2f8f1] w-fit cursor-pointer"
-    on:click={openModal}
+    onclick={openModal}
   >
     <div
       class="w-6 h-6 bg-[#69b761] rounded-md flex justify-center items-center p-1"
@@ -138,11 +138,11 @@
     <div
       transition:fade={{ duration: 150 }}
       class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 font-roboto"
-      on:click={closeModal}
+      onclick={closeModal}
     >
       <div
         transition:scale={{ duration: 150 }}
-        on:click|stopPropagation
+        onclick={(e) => { e.stopPropagation()}}
         class="bg-white rounded-lg shadow-xl max-w-[500px] w-full max-h-[90vh] overflow-y-auto p-6"
       >
         <!-- Modal Header -->
@@ -150,7 +150,7 @@
           <div></div>
           <h3 class="text-lg font-semibold">Report</h3>
           <button
-            on:click={closeModal}
+            onclick={closeModal}
             class="p-1 rounded-full cursor-pointer hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400"
             aria-label="Close report modal"
           >
